@@ -15,25 +15,18 @@ public class BabySitterPaymentCalculator {
 
     public BabySitterPaymentCalculator(int bedTime) {
         this.bedTime = adjustTime(bedTime);
-        for (int hour = 5; hour <= 16; hour++) {
-            if (after(hour, this.bedTime) && before(hour, MIDNIGHT)) {
-                hourlyRates.put(hour, AFTER_BEDTIME_RATE);
-            } else if (before(hour, this.bedTime) && before(hour, MIDNIGHT)) {
-                hourlyRates.put(hour, STANDARD_RATE);
-            } else if (after(hour, MIDNIGHT)) {
-                hourlyRates.put(hour, AFTER_MIDNIGHT_RATE);
+        for (int h = 5; h <= 16; h++) {
+            Hour hour = new Hour(h);
+            if (hour.afterBedtime() && hour.beforeMidnight()) {
+                hourlyRates.put(h, AFTER_BEDTIME_RATE);
+            } else if (hour.beforeBedtime() && hour.beforeMidnight()) {
+                hourlyRates.put(h, STANDARD_RATE);
+            } else if (hour.afterMidnight()) {
+                hourlyRates.put(h, AFTER_MIDNIGHT_RATE);
             } else {
                 throw new IllegalStateException();
             }
         }
-    }
-
-    private boolean after(int hour, int time) {
-        return hour >= time;
-    }
-
-    private boolean before(int hour, int time) {
-        return hour < time;
     }
 
     public int calculate(final int startTime, final int endTime) {
@@ -41,7 +34,7 @@ public class BabySitterPaymentCalculator {
         int adjustedEndTime = adjustTime(endTime);
 
         int pay = 0;
-        for (int i = adjustedStartTime; before(i, adjustedEndTime); i++) {
+        for (int i = adjustedStartTime; i < adjustedEndTime; i++) {
             pay += hourlyRates.get(i);
         }
         return pay;
@@ -51,4 +44,27 @@ public class BabySitterPaymentCalculator {
         return Arrays.asList(1, 2, 3, 4).contains(time) ? time + 12 : time;
     }
 
+    private class Hour {
+        private int hour;
+
+        Hour(int hour) {
+            this.hour = hour;
+        }
+
+        boolean afterBedtime() {
+            return hour >= bedTime;
+        }
+
+        boolean beforeBedtime() {
+            return hour < bedTime;
+        }
+
+        boolean afterMidnight() {
+            return hour >= MIDNIGHT;
+        }
+
+        boolean beforeMidnight() {
+            return hour < MIDNIGHT;
+        }
+    }
 }
