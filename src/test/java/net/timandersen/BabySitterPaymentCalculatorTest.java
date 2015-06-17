@@ -12,5 +12,11 @@ public class BabySitterPaymentCalculatorTest {
         assertEquals(12, dollars.calculate(5, 6));
     }
 
+    @Test
+    public void babysitFromFiveToSevenPm() throws Exception {
+        BabySitterPaymentCalculator dollars = new BabySitterPaymentCalculator();
+        assertEquals(24, dollars.calculate(5, 7));
+    }
+
 
 }
