@@ -1,14 +1,12 @@
 package net.timandersen;
 
-import sun.plugin.dom.exception.InvalidStateException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class BabySitterPaymentCalculator {
 
-    private final List<HourlyRate> hourlyRates = new ArrayList<HourlyRate>();
+    private final List<HourlyRate> hourlyRates = new ArrayList<>();
 
     public BabySitterPaymentCalculator(int bedTime) {
         for (int hour = 5; hour <= 16; hour++) {
@@ -27,10 +25,7 @@ public class BabySitterPaymentCalculator {
     }
 
     private int lookupRateFor(int hour) {
-        for (HourlyRate hourlyRate : hourlyRates) {
-            if (hourlyRate.getHour() == hour) return hourlyRate.getRate();
-        }
-        throw new InvalidStateException(hour + "");
+        return hourlyRates.stream().filter(h -> h.getHour() == hour).findFirst().get().getRate();
     }
 
     private int adjustTime(int time) {
