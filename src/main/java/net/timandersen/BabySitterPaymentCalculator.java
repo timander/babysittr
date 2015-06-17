@@ -2,6 +2,9 @@ package net.timandersen;
 
 public class BabySitterPaymentCalculator {
 
+    private final int BASE_RATE = 12;
+    private final int AFTER_BEDTIME_DISCOUNT = 4;
+    private final int AFTER_MIDNIGHT_PREMIUM = 4;
     private int bedTime;
 
     public BabySitterPaymentCalculator(int bedTime) {
@@ -16,12 +19,12 @@ public class BabySitterPaymentCalculator {
                 + afterMidnightPremium(adjustedStartTime, adjustedEndTime);
     }
 
-    private int adjustTime(int startTime) {
-        return startTime >= 1 && startTime <= 4 ? startTime + 12: startTime;
+    private int adjustTime(int time) {
+        return time >= 1 && time <= 4 ? time + 12: time;
     }
 
     private int basePay(int startTime, int endTime) {
-        return (endTime - startTime) * 12;
+        return (endTime - startTime) * BASE_RATE;
     }
 
     private int afterMidnightPremium(int startTime, int endTime) {
@@ -32,7 +35,7 @@ public class BabySitterPaymentCalculator {
         else hoursAfterMidnight = endTime - 12;
         int afterMidnightPremium = 0;
         if (hoursAfterMidnight > 0) {
-            afterMidnightPremium = hoursAfterMidnight * 4;
+            afterMidnightPremium = hoursAfterMidnight * AFTER_MIDNIGHT_PREMIUM;
         }
         return afterMidnightPremium;
     }
@@ -43,7 +46,7 @@ public class BabySitterPaymentCalculator {
             if (endTime > 12) endTime = 12;
             int hoursAfterBedtime = endTime - bedTime;
             if (hoursAfterBedtime > 0) {
-                afterBedtimeDiscount = hoursAfterBedtime * 4;
+                afterBedtimeDiscount = hoursAfterBedtime * AFTER_BEDTIME_DISCOUNT;
             }
         }
         return afterBedtimeDiscount;
