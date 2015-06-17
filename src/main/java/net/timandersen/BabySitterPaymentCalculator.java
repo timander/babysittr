@@ -6,10 +6,6 @@ import java.util.Map;
 
 public class BabySitterPaymentCalculator {
 
-    private final int STANDARD_RATE = 12;
-    private final int AFTER_BEDTIME_RATE = 8;
-    private final int AFTER_MIDNIGHT_RATE = 16;
-    private final int MIDNIGHT = 12;
     private int bedTime;
     private final Map<Integer, Integer> hourlyRates = new HashMap<Integer, Integer>();
 
@@ -17,7 +13,7 @@ public class BabySitterPaymentCalculator {
         this.bedTime = adjustTime(bedTime);
         for (int h = 5; h <= 16; h++) {
             Hour hour = new Hour(h);
-            hourlyRates.put(h, hour.getRate());
+            hourlyRates.put(hour.getHour(), hour.getRate());
         }
     }
 
@@ -37,10 +33,19 @@ public class BabySitterPaymentCalculator {
     }
 
     private class Hour {
+        private final int STANDARD_RATE = 12;
+        private final int AFTER_BEDTIME_RATE = 8;
+        private final int AFTER_MIDNIGHT_RATE = 16;
+        private final int MIDNIGHT = 12;
+
         private int hour;
 
         Hour(int hour) {
             this.hour = hour;
+        }
+
+        int getHour() {
+            return hour;
         }
 
         boolean afterBedtime() {
@@ -60,11 +65,11 @@ public class BabySitterPaymentCalculator {
         }
 
         int getRate() {
-            if (this.afterBedtime() && this.beforeMidnight()) {
+            if (afterBedtime() && beforeMidnight()) {
                 return AFTER_BEDTIME_RATE;
-            } else if (this.beforeBedtime() && this.beforeMidnight()) {
+            } else if (beforeBedtime() && beforeMidnight()) {
                 return STANDARD_RATE;
-            } else if (this.afterMidnight()) {
+            } else if (afterMidnight()) {
                 return AFTER_MIDNIGHT_RATE;
             } else {
                 throw new IllegalStateException();
