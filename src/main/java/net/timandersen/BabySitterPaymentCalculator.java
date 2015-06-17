@@ -1,55 +1,44 @@
 package net.timandersen;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BabySitterPaymentCalculator {
 
-    private final int BASE_RATE = 12;
-    private final int AFTER_BEDTIME_DISCOUNT = 4;
-    private final int AFTER_MIDNIGHT_PREMIUM = 4;
+    private final int STANDARD_RATE = 12;
+    private final int AFTER_BEDTIME_RATE = 8;
+    private final int AFTER_MIDNIGHT_RATE = 16;
     private int bedTime;
+    private final Map<Integer, Integer> hourlyRates = new HashMap<Integer, Integer>();
 
     public BabySitterPaymentCalculator(int bedTime) {
-        this.bedTime = bedTime;
+        this.bedTime = adjustTime(bedTime);
+        for (int hour = 5; hour <= 16; hour++) {
+            if (hour >= this.bedTime && hour < 12) {
+                hourlyRates.put(hour, AFTER_BEDTIME_RATE);
+            } else if (hour < this.bedTime && hour < 12) {
+                hourlyRates.put(hour, STANDARD_RATE);
+            } else if (hour >= 12) {
+                hourlyRates.put(hour, AFTER_MIDNIGHT_RATE);
+            } else {
+                throw new IllegalStateException();
+            }
+        }
     }
 
     public int calculate(final int startTime, final int endTime) {
         int adjustedStartTime = adjustTime(startTime);
         int adjustedEndTime = adjustTime(endTime);
-        return basePay(adjustedStartTime, adjustedEndTime)
-                - afterBedtimeDiscount(adjustedStartTime, adjustedEndTime)
-                + afterMidnightPremium(adjustedStartTime, adjustedEndTime);
+
+        int pay = 0;
+        for (int i = adjustedStartTime; i < adjustedEndTime; i++) {
+            pay += hourlyRates.get(i);
+        }
+        return pay;
     }
 
     private int adjustTime(int time) {
-        return time >= 1 && time <= 4 ? time + 12: time;
-    }
-
-    private int basePay(int startTime, int endTime) {
-        return (endTime - startTime) * BASE_RATE;
-    }
-
-    private int afterMidnightPremium(int startTime, int endTime) {
-        int hoursAfterMidnight;
-        if (startTime > 12) {
-            hoursAfterMidnight = endTime - startTime;
-        }
-        else hoursAfterMidnight = endTime - 12;
-        int afterMidnightPremium = 0;
-        if (hoursAfterMidnight > 0) {
-            afterMidnightPremium = hoursAfterMidnight * AFTER_MIDNIGHT_PREMIUM;
-        }
-        return afterMidnightPremium;
-    }
-
-    private int afterBedtimeDiscount(int startTime, int endTime) {
-        int afterBedtimeDiscount = 0;
-        if (startTime <= bedTime) {
-            if (endTime > 12) endTime = 12;
-            int hoursAfterBedtime = endTime - bedTime;
-            if (hoursAfterBedtime > 0) {
-                afterBedtimeDiscount = hoursAfterBedtime * AFTER_BEDTIME_DISCOUNT;
-            }
-        }
-        return afterBedtimeDiscount;
+        return time >= 1 && time <= 4 ? time + 12 : time;
     }
 
 }

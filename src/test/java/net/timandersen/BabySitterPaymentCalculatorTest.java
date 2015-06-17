@@ -54,4 +54,10 @@ public class BabySitterPaymentCalculatorTest {
         assertEquals(48, calculator.calculate(1, 4));
     }
 
+    @Test
+    public void bedtimeAfterMidnight() throws Exception {
+        BabySitterPaymentCalculator calculator = new BabySitterPaymentCalculator(2);
+        assertEquals(60, calculator.calculate(11, 3));
+    }
+
 }
