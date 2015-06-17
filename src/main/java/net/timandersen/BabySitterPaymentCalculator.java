@@ -11,10 +11,11 @@ public class BabySitterPaymentCalculator {
     public int calculate(int startTime, int endTime) {
         if (endTime >= 1 && endTime <= 4) endTime += 12;
         if (startTime >= 1 && startTime <= 4) startTime += 12;
-        int totalHours = endTime - startTime;
-        int afterBedtimeDiscount = afterBedtimeDiscount(startTime, endTime);
-        int afterMidnightPremium = afterMidnightPremium(startTime, endTime);
-        return totalHours * 12 - afterBedtimeDiscount + afterMidnightPremium;
+        return basePay(startTime, endTime) - afterBedtimeDiscount(startTime, endTime) + afterMidnightPremium(startTime, endTime);
+    }
+
+    private int basePay(int startTime, int endTime) {
+        return (endTime - startTime) * 12;
     }
 
     private int afterMidnightPremium(int startTime, int endTime) {
