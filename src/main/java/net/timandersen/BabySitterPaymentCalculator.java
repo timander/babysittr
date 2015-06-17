@@ -1,7 +1,21 @@
 package net.timandersen;
 
 public class BabySitterPaymentCalculator {
-    public int calculate(int startTime, int endTime) {
-        return (endTime - startTime) * 12;
+
+    private int bedTime;
+
+    public BabySitterPaymentCalculator(int bedTime) {
+        this.bedTime = bedTime;
     }
+
+    public int calculate(int startTime, int endTime) {
+        int totalHours = endTime - startTime;
+        int hoursAfterBedtime = endTime - bedTime;
+        int afterBedtimeDiscount = 0;
+        if (hoursAfterBedtime > 0) {
+            afterBedtimeDiscount = hoursAfterBedtime * 4;
+        }
+        return totalHours * 12 - afterBedtimeDiscount;
+    }
+
 }
