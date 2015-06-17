@@ -40,5 +40,11 @@ public class BabySitterPaymentCalculatorTest {
         assertEquals(64, calculator.calculate(12, 4));
     }
 
+    @Test
+    public void babysitFromNinePmToOneAmWithBedtimeAtNinePm() throws Exception {
+        assertEquals(40, calculator.calculate(9, 1));
+    }
+
+
 
 }

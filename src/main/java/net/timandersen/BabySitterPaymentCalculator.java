@@ -29,7 +29,7 @@ public class BabySitterPaymentCalculator {
 
     private int afterBedtimeDiscount(int startTime, int endTime) {
         int afterBedtimeDiscount = 0;
-        if (startTime < bedTime) {
+        if (startTime <= bedTime) {
             if (endTime > 12) endTime = 12;
             int hoursAfterBedtime = endTime - bedTime;
             if (hoursAfterBedtime > 0) {
