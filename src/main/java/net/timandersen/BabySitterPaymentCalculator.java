@@ -1,5 +1,6 @@
 package net.timandersen;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,16 +15,32 @@ public class BabySitterPaymentCalculator {
     public BabySitterPaymentCalculator(int bedTime) {
         this.bedTime = adjustTime(bedTime);
         for (int hour = 5; hour <= 16; hour++) {
-            if (hour >= this.bedTime && hour < 12) {
+            if (beforeBedtime(hour) && beforeMidnight(hour)) {
                 hourlyRates.put(hour, AFTER_BEDTIME_RATE);
-            } else if (hour < this.bedTime && hour < 12) {
+            } else if (afterBedtime(hour) && beforeMidnight(hour)) {
                 hourlyRates.put(hour, STANDARD_RATE);
-            } else if (hour >= 12) {
+            } else if (afterMidnight(hour)) {
                 hourlyRates.put(hour, AFTER_MIDNIGHT_RATE);
             } else {
                 throw new IllegalStateException();
             }
         }
+    }
+
+    private boolean afterMidnight(int hour) {
+        return hour >= 12;
+    }
+
+    private boolean afterBedtime(int hour) {
+        return hour < this.bedTime;
+    }
+
+    private boolean beforeMidnight(int hour) {
+        return hour < 12;
+    }
+
+    private boolean beforeBedtime(int hour) {
+        return hour >= this.bedTime;
     }
 
     public int calculate(final int startTime, final int endTime) {
@@ -38,7 +55,7 @@ public class BabySitterPaymentCalculator {
     }
 
     private int adjustTime(int time) {
-        return time >= 1 && time <= 4 ? time + 12 : time;
+        return Arrays.asList(1, 2, 3, 4).contains(time) ? time + 12 : time;
     }
 
 }
