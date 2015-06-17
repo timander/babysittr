@@ -11,9 +11,9 @@ public class BabySitterPaymentCalculator {
 
     public BabySitterPaymentCalculator(int bedTime) {
         this.bedTime = adjustTime(bedTime);
-        for (int h = 5; h <= 16; h++) {
-            Hour hour = new Hour(h);
-            hourlyRates.put(hour.getHour(), hour.getRate());
+        for (int hour = 5; hour <= 16; hour++) {
+            HourlyRate hourlyRate = new HourlyRate(hour);
+            hourlyRates.put(hourlyRate.getHour(), hourlyRate.getRate());
         }
     }
 
@@ -32,7 +32,7 @@ public class BabySitterPaymentCalculator {
         return Arrays.asList(1, 2, 3, 4).contains(time) ? time + 12 : time;
     }
 
-    private class Hour {
+    private class HourlyRate {
         private final int STANDARD_RATE = 12;
         private final int AFTER_BEDTIME_RATE = 8;
         private final int AFTER_MIDNIGHT_RATE = 16;
@@ -40,7 +40,7 @@ public class BabySitterPaymentCalculator {
 
         private int hour;
 
-        Hour(int hour) {
+        HourlyRate(int hour) {
             this.hour = hour;
         }
 
