@@ -17,15 +17,7 @@ public class BabySitterPaymentCalculator {
         this.bedTime = adjustTime(bedTime);
         for (int h = 5; h <= 16; h++) {
             Hour hour = new Hour(h);
-            if (hour.afterBedtime() && hour.beforeMidnight()) {
-                hourlyRates.put(h, AFTER_BEDTIME_RATE);
-            } else if (hour.beforeBedtime() && hour.beforeMidnight()) {
-                hourlyRates.put(h, STANDARD_RATE);
-            } else if (hour.afterMidnight()) {
-                hourlyRates.put(h, AFTER_MIDNIGHT_RATE);
-            } else {
-                throw new IllegalStateException();
-            }
+            hourlyRates.put(h, hour.getRate());
         }
     }
 
@@ -65,6 +57,18 @@ public class BabySitterPaymentCalculator {
 
         boolean beforeMidnight() {
             return hour < MIDNIGHT;
+        }
+
+        int getRate() {
+            if (this.afterBedtime() && this.beforeMidnight()) {
+                return AFTER_BEDTIME_RATE;
+            } else if (this.beforeBedtime() && this.beforeMidnight()) {
+                return STANDARD_RATE;
+            } else if (this.afterMidnight()) {
+                return AFTER_MIDNIGHT_RATE;
+            } else {
+                throw new IllegalStateException();
+            }
         }
     }
 }
