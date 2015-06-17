@@ -8,10 +8,14 @@ public class BabySitterPaymentCalculator {
         this.bedTime = bedTime;
     }
 
-    public int calculate(int startTime, int endTime) {
-        if (endTime >= 1 && endTime <= 4) endTime += 12;
+    public int calculate(int startTime, final int endTime) {
+        int adjustedEndTime = adjustEndTime(endTime);
         if (startTime >= 1 && startTime <= 4) startTime += 12;
-        return basePay(startTime, endTime) - afterBedtimeDiscount(startTime, endTime) + afterMidnightPremium(startTime, endTime);
+        return basePay(startTime, adjustedEndTime) - afterBedtimeDiscount(startTime, adjustedEndTime) + afterMidnightPremium(startTime, adjustedEndTime);
+    }
+
+    private int adjustEndTime(int endTime) {
+        return endTime >= 1 && endTime <= 4 ? endTime + 12 : endTime;
     }
 
     private int basePay(int startTime, int endTime) {
