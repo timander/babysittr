@@ -31,7 +31,6 @@ public class BabySitterPaymentCalculatorTest {
     }
 
     @Test
-    @Ignore
     public void babysitFromFivePmToFourAmWithBedtimeAtNinePm() throws Exception {
         assertEquals(136, calculator.calculate(5, 4));
     }
