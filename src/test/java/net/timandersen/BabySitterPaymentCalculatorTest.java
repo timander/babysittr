@@ -1,7 +1,6 @@
 package net.timandersen;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -45,6 +44,14 @@ public class BabySitterPaymentCalculatorTest {
         assertEquals(40, calculator.calculate(9, 1));
     }
 
+    @Test
+    public void babysitFromNinePmToNinePmWithBedtimeAtNinePm() throws Exception {
+        assertEquals(0, calculator.calculate(9, 9));
+    }
 
+    @Test
+    public void babysitFromOneAmToFourAm() throws Exception {
+        assertEquals(48, calculator.calculate(1, 4));
+    }
 
 }
