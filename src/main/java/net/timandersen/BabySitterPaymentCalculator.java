@@ -1,31 +1,36 @@
 package net.timandersen;
 
+import sun.plugin.dom.exception.InvalidStateException;
+
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class BabySitterPaymentCalculator {
 
-    private int bedTime;
-    private final Map<Integer, Integer> hourlyRates = new HashMap<Integer, Integer>();
+    private final List<HourlyRate> hourlyRates = new ArrayList<HourlyRate>();
 
     public BabySitterPaymentCalculator(int bedTime) {
-        this.bedTime = adjustTime(bedTime);
         for (int hour = 5; hour <= 16; hour++) {
-            HourlyRate hourlyRate = new HourlyRate(hour);
-            hourlyRates.put(hourlyRate.getHour(), hourlyRate.getRate());
+            hourlyRates.add(new HourlyRate(hour, adjustTime(bedTime)));
         }
     }
 
     public int calculate(final int startTime, final int endTime) {
         int adjustedStartTime = adjustTime(startTime);
         int adjustedEndTime = adjustTime(endTime);
-
         int pay = 0;
         for (int i = adjustedStartTime; i < adjustedEndTime; i++) {
-            pay += hourlyRates.get(i);
+            pay += lookupRateFor(i);
         }
         return pay;
+    }
+
+    private int lookupRateFor(int hour) {
+        for (HourlyRate hourlyRate : hourlyRates) {
+            if (hourlyRate.getHour() == hour) return hourlyRate.getRate();
+        }
+        throw new InvalidStateException(hour + "");
     }
 
     private int adjustTime(int time) {
@@ -39,9 +44,11 @@ public class BabySitterPaymentCalculator {
         private final int MIDNIGHT = 12;
 
         private int hour;
+        private int bedTime;
 
-        HourlyRate(int hour) {
+        private HourlyRate(int hour, int bedTime) {
             this.hour = hour;
+            this.bedTime = bedTime;
         }
 
         int getHour() {
