@@ -11,7 +11,9 @@ public class BabySitterPaymentCalculator {
     public int calculate(final int startTime, final int endTime) {
         int adjustedStartTime = adjustTime(startTime);
         int adjustedEndTime = adjustTime(endTime);
-        return basePay(adjustedStartTime, adjustedEndTime) - afterBedtimeDiscount(adjustedStartTime, adjustedEndTime) + afterMidnightPremium(adjustedStartTime, adjustedEndTime);
+        return basePay(adjustedStartTime, adjustedEndTime)
+                - afterBedtimeDiscount(adjustedStartTime, adjustedEndTime)
+                + afterMidnightPremium(adjustedStartTime, adjustedEndTime);
     }
 
     private int adjustTime(int startTime) {
@@ -23,9 +25,15 @@ public class BabySitterPaymentCalculator {
     }
 
     private int afterMidnightPremium(int startTime, int endTime) {
-        int hoursAfterMidnight = startTime > 12 ? endTime - startTime : endTime - 12;
+        int hoursAfterMidnight;
+        if (startTime > 12) {
+            hoursAfterMidnight = endTime - startTime;
+        }
+        else hoursAfterMidnight = endTime - 12;
         int afterMidnightPremium = 0;
-        if (hoursAfterMidnight > 0) afterMidnightPremium = hoursAfterMidnight * 4;
+        if (hoursAfterMidnight > 0) {
+            afterMidnightPremium = hoursAfterMidnight * 4;
+        }
         return afterMidnightPremium;
     }
 
@@ -34,7 +42,9 @@ public class BabySitterPaymentCalculator {
         if (startTime <= bedTime) {
             if (endTime > 12) endTime = 12;
             int hoursAfterBedtime = endTime - bedTime;
-            if (hoursAfterBedtime > 0) afterBedtimeDiscount = hoursAfterBedtime * 4;
+            if (hoursAfterBedtime > 0) {
+                afterBedtimeDiscount = hoursAfterBedtime * 4;
+            }
         }
         return afterBedtimeDiscount;
     }
